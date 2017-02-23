@@ -1,3 +1,5 @@
+from skimage.feature import hog
+
 '''
 Function to return HOG (Histogram of Oriented Gradient features for a given image
 input: Single channel image
@@ -7,6 +9,7 @@ output: (if vis True): Array of features, output image
 
 # If vis is True, returns an image for visualization and unrolled vectors
 def hog_features(img, orient, pix_per_cell, cell_per_block, vis=False, feature_vec=True):
+        
     if vis == True:
         features, hog_image = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell),
                                   cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, 
