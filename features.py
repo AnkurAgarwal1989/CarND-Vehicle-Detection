@@ -55,9 +55,9 @@ def calc_hog_features(img, orient, pix_per_cell, cell_per_block, channel='ALL', 
     else:
         hog_features, hog_images = calc_hog_features(feature_image[:,:,channel], orient, 
         pix_per_cell, cell_per_block, vis, feature_vec)
-		
-	if feature_vec = True:
-		hog_features = np.ravel(hog_features)      
+
+    if feature_vec == True:
+        hog_features = np.ravel(hog_features)      
     return hog_features, hog_images
 
     
