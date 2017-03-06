@@ -29,19 +29,21 @@ for image in images:
     
 
 h_colorspace = 'YUV' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-s_colorspace = 'HSV' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+s_colorspace = 'YCrCb' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
 orient = 9
 pix_per_cell = 8
 cell_per_block = 2
 hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
 
 t=time.time()
+#cars = cars[:100]
+#notcars = notcars[:100]
 car_features = extract_features(cars, h_cspace=h_colorspace, s_cspace=s_colorspace, orient=orient, 
                         pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, 
-                        hog_channel=hog_channel)
+                        hog_channel=hog_channel, feature_vec=True)
 notcar_features = extract_features(notcars, h_cspace=h_colorspace, s_cspace=s_colorspace, orient=orient, 
                         pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, 
-                        hog_channel=hog_channel)
+                        hog_channel=hog_channel, feature_vec=True)
 t2 = time.time()
 print(round(t2-t, 2), 'Seconds to extract HOG features...')
 
@@ -66,6 +68,8 @@ print('Feature vector length:', len(X_train[0]))
 
 Lin_clf = train_LinearSVC(X_train, y_train, X_val, y_val)
 
+pickle_file = 'Car_NoCar_LinearSVC.p'
+
 #Save the trained SVM and the parameters and configs
 color_spatial_size = 32
 svc_dict = {}
@@ -77,12 +81,14 @@ svc_dict["cell_per_block"] = cell_per_block
 svc_dict["color_spatial_size"] = color_spatial_size
 svc_dict["h_colorspace"] = h_colorspace
 svc_dict["s_colorspace"] = s_colorspace
-with open('Car_NoCar_LinearSVC.p', 'w') as f:
+svc_dict["hog_channel"] = hog_channel
+with open(pickle_file, 'w') as f:
     pickle.dump(svc_dict, f)
 
 #To load the trained classifier:
-with open('Car_NoCar_LinearSVC.p', 'r') as f:
+with open(pickle_file, 'r') as f:
     svc_dict = pickle.load(f)
-    print("Classifier saved to Car_NoCar_LinearSVC.p")
+    print('Classifier saved to ', pickle_file)
+    print(svc_dict["svc"].coef_)
     print(svc_dict["svc"])
 
