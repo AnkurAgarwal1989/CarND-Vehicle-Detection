@@ -55,11 +55,14 @@ def calc_hog_features(img, orient, pix_per_cell, cell_per_block, channel='ALL', 
     else:
         hog_features, hog_images = calc_hog_features(feature_image[:,:,channel], orient, 
         pix_per_cell, cell_per_block, vis, feature_vec)
-    hog_features = np.ravel(hog_features)                    
+		
+	if feature_vec = True:
+		hog_features = np.ravel(hog_features)      
     return hog_features, hog_images
 
     
-# Function to Spatially bin the pixel values in an image. Returns a single vector        
+# Function to Spatially bin the pixel values in an image. Returns a single vector
+#we take a image patch (64x64) in our case, and scale it to 32x32. Then we      
 def calc_bin_spatial_features(img, cspace='RGB', size=(32, 32)):
     # Convert image to new color space (if specified)
     feature_img = convert_cspace(img, cspace)
@@ -72,7 +75,7 @@ def calc_bin_spatial_features(img, cspace='RGB', size=(32, 32)):
 #Color Space for HOG: h_cspace
 #Color Space for SB: s_cspace
 def extract_features(imgs, h_cspace='RGB', s_cspace='RGB', orient=9, 
-                        pix_per_cell=8, cell_per_block=2, hog_channel=0):
+                        pix_per_cell=8, cell_per_block=2, hog_channel=0, color_spatial_size=32):
     # Create a list to append feature vectors to
     features = []
     # Iterate through the list of images
@@ -83,7 +86,7 @@ def extract_features(imgs, h_cspace='RGB', s_cspace='RGB', orient=9,
         # Call calc_hog_features() with vis=False, feature_vec=True
         hog_features,_ = calc_hog_features(image, orient, pix_per_cell, cell_per_block, channel=hog_channel, cspace=h_cspace, vis=False, feature_vec=True)
         
-        bin_spatial_features = calc_bin_spatial_features(image, cspace=s_cspace, size=(32, 32))
+        bin_spatial_features = calc_bin_spatial_features(image, cspace=s_cspace, size=(color_spatial_size, color_spatial_size))
                 
         # Append the new feature vector to the features list
         features.append(np.hstack((hog_features, bin_spatial_features)))
