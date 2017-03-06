@@ -1,3 +1,4 @@
 non-vehicles/
 vehicles/
 *.pyc
+.ipynb_checkpoints/ 
