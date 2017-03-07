@@ -38,7 +38,7 @@ def calc_hog_features_(img, orient, pix_per_cell, cell_per_block, vis=False, fea
         hog_features = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, 
                        visualise=False, feature_vector=feature_vec)
-        return np.array(hog_features), None
+        return np.array(hog_features),None
 
 # If vis is True, returns an image for visualization and unrolled vectors
 def calc_hog_features(img, orient, pix_per_cell, cell_per_block, channel='ALL', cspace='RGB', vis=False, feature_vec=False):
@@ -57,16 +57,21 @@ def calc_hog_features(img, orient, pix_per_cell, cell_per_block, channel='ALL', 
         pix_per_cell, cell_per_block, vis, feature_vec)
 
     if feature_vec == True:
-        hog_features = np.ravel(hog_features)      
-    return np.array(hog_features), hog_images
+        hog_features = np.ravel(hog_features)
+    if vis == True:
+        return np.array(hog_features), hog_images
+    else:
+        return np.array(hog_features)
 
     
 # Function to Spatially bin the pixel values in an image. Returns a single vector
 #we take a image patch (64x64) in our case, and scale it to 32x32. Then we      
-def calc_bin_spatial_features(img, cspace='RGB', size=(32, 32)):
+def calc_bin_spatial_features(img, cspace='RGB', scale=2, feature_vec=False):
     # Convert image to new color space (if specified)
     feature_img = convert_cspace(img, cspace)
-    features = cv2.resize(feature_img, size).ravel()
+    features = cv2.resize(feature_img, (img.shape[0]//2, img.shape[1]//2))
+    if feature_vec:
+        features = features.ravel()
     return features
         
         
@@ -96,7 +101,7 @@ def extract_features(input, h_cspace='RGB', s_cspace='RGB', orient=9,
             #features.append(hog_features)
     #We are given an array of RGB
     else:
-        features,_ = calc_hog_features(input, orient, pix_per_cell, cell_per_block, channel=hog_channel, cspace=h_cspace, vis=vis, feature_vec=feature_vec)
+        features = calc_hog_features(input, orient, pix_per_cell, cell_per_block, channel=hog_channel, cspace=h_cspace, vis=vis, feature_vec=feature_vec)
         features = np.array(features)
     # Return list of feature vectors
     return features
