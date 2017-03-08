@@ -66,10 +66,12 @@ def calc_hog_features(img, orient, pix_per_cell, cell_per_block, channel='ALL', 
     
 # Function to Spatially bin the pixel values in an image. Returns a single vector
 #we take a image patch (64x64) in our case, and scale it to 32x32. Then we      
-def calc_bin_spatial_features(img, cspace='RGB', scale=2, feature_vec=False):
+def calc_bin_spatial_features(img, cspace='RGB', scale=4, feature_vec=False):
+    if scale != 1:
+        img = cv2.resize(img, (img.shape[0]//scale, img.shape[1]//scale), cv2.INTER_AREA )
+        
     # Convert image to new color space (if specified)
-    feature_img = convert_cspace(img, cspace)
-    features = cv2.resize(feature_img, (img.shape[0]//2, img.shape[1]//2))
+    features = convert_cspace(img, cspace)
     if feature_vec:
         features = features.ravel()
     return features
@@ -80,7 +82,7 @@ def calc_bin_spatial_features(img, cspace='RGB', scale=2, feature_vec=False):
 #Color Space for HOG: h_cspace
 #Color Space for SB: s_cspace
 def extract_features(input, h_cspace='RGB', s_cspace='RGB', orient=9, 
-                        pix_per_cell=8, cell_per_block=2, hog_channel=0, color_spatial_size=32, feature_vec=False, vis=False):
+                        pix_per_cell=8, cell_per_block=2, hog_channel=0, color_scale=4, feature_vec=False, vis=False):
     # Create a list to append feature vectors to
     features = []
     #If input is a list of names
@@ -91,10 +93,16 @@ def extract_features(input, h_cspace='RGB', s_cspace='RGB', orient=9,
             image = cv2.imread(file)    
 
             # Call calc_hog_features() with vis=False, feature_vec=True
-            hog_features,_ = calc_hog_features(image, orient, pix_per_cell, cell_per_block, channel=hog_channel, cspace=h_cspace, vis=vis, feature_vec=feature_vec)
+            if vis:
+                hog_features,_ = calc_hog_features(image, orient, pix_per_cell, cell_per_block, channel=hog_channel,
+                cspace=h_cspace, vis=vis, feature_vec=feature_vec)
+            else:
+                hog_features = calc_hog_features(image, orient, pix_per_cell, cell_per_block, channel=hog_channel,
+                cspace=h_cspace, vis=vis, feature_vec=feature_vec)
+            
             hog_features = np.array(hog_features)
             
-            bin_spatial_features = calc_bin_spatial_features(image, cspace=s_cspace, size=(color_spatial_size, color_spatial_size))
+            bin_spatial_features = calc_bin_spatial_features(image, cspace=s_cspace, scale=color_scale, feature_vec=True)
                     
             # Append the new feature vector to the features list
             features.append(np.hstack((hog_features, bin_spatial_features)))
