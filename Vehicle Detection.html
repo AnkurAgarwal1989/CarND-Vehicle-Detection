@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>Vehicle Detection.md</title><link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css'><style type='text/css'>html, body {overflow-x: initial !important;}html { font-size: 14px; background-color: rgb(255, 255, 255); color: rgb(51, 51, 51); }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { background: rgb(181, 214, 252); text-shadow: none; }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; padding-bottom: 70px; white-space: pre-wrap; overflow-x: auto; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+.typora-export #write { margin: 0px auto; }
+#write > p:first-child, #write > ul:first-child, #write > ol:first-child, #write > pre:first-child, #write > blockquote:first-child, #write > div:first-child, #write > table:first-child { margin-top: 30px; }
+#write li > table:first-child { margin-top: -20px; }
+img { max-width: 100%; vertical-align: middle; }
+input, button, select, textarea { color: inherit; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+::before, ::after, * { box-sizing: border-box; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write div, #write pre { width: inherit; }
+#write p, #write h1, #write h2, #write h3, #write h4, #write h5, #write h6 { position: relative; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+p { -webkit-margin-before: 1rem; -webkit-margin-after: 1rem; -webkit-margin-start: 0px; -webkit-margin-end: 0px; }
+.mathjax-block { margin-top: 0px; margin-bottom: 0px; -webkit-margin-before: 0rem; -webkit-margin-after: 0rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: bold; font-style: italic; }
+a { cursor: pointer; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; margin: 4px 0px 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 80px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+pre { white-space: pre-wrap; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+.md-fences .CodeMirror.CodeMirror-wrap { top: -1.6em; margin-bottom: -1.6em; }
+.md-fences.mock-cm { white-space: pre-wrap; }
+.show-fences-line-number .md-fences { padding-left: 0px; }
+.show-fences-line-number .md-fences.mock-cm { padding-left: 40px; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; padding-top: 1em; padding-bottom: 1em; }
+.footnotes + .footnotes { margin-top: -1em; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: transparent; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: normal; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li p, li .mathjax-block { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; }
+@media print {
+  html, body { height: 100%; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid-page; orphans: 2; }
+  p { orphans: 4; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 1cm; padding-right: 1cm; }
+  .typora-export #write::after { height: 0px; }
+  @page { margin: 20mm 0mm; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 2.86rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p .md-image:only-child { display: inline-block; width: 100%; text-align: center; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.mathjax-block { white-space: pre; overflow: hidden; width: 100%; }
+p + .mathjax-block { margin-top: -1.143rem; }
+.mathjax-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: none; box-shadow: none; }
+.task-list { list-style-type: none; }
+.task-list-item { position: relative; padding-left: 1em; }
+.task-list-item input { position: absolute; top: 0px; left: 0px; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc::after, .md-toc-content::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); text-decoration: none; }
+.md-toc-inner:hover { }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: bold; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+.md-tag { opacity: 0.5; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: monospace; }
+code { text-align: left; }
+h1 .md-tag, h2 .md-tag, h3 .md-tag, h4 .md-tag, h5 .md-tag, h6 .md-tag { font-weight: initial; opacity: 0.35; }
+a.md-print-anchor { border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: none !important; background: transparent !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.mathjax-block .MathJax_SVG_Display { text-align: center; margin: 1em 0em; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: monospace; }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: normal; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none; }
+
+
+@font-face { font-family: "Open Sans"; font-style: normal; font-weight: normal; src: local("Open Sans Regular"), url("./github/400.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: italic; font-weight: normal; src: local("Open Sans Italic"), url("./github/400i.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: normal; font-weight: bold; src: local("Open Sans Bold"), url("./github/700.woff") format("woff"); }
+@font-face { font-family: "Open Sans"; font-style: italic; font-weight: bold; src: local("Open Sans Bold Italic"), url("./github/700i.woff") format("woff"); }
+html { font-size: 16px; }
+body { font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; color: rgb(51, 51, 51); line-height: 1.6; }
+#write { max-width: 860px; margin: 0px auto; padding: 20px 30px 100px; }
+#write > ul:first-child, #write > ol:first-child { margin-top: 30px; }
+body > :first-child { margin-top: 0px !important; }
+body > :last-child { margin-bottom: 0px !important; }
+a { color: rgb(65, 131, 196); }
+h1, h2, h3, h4, h5, h6 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-weight: bold; line-height: 1.4; cursor: text; }
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { text-decoration: none; }
+h1 tt, h1 code { font-size: inherit; }
+h2 tt, h2 code { font-size: inherit; }
+h3 tt, h3 code { font-size: inherit; }
+h4 tt, h4 code { font-size: inherit; }
+h5 tt, h5 code { font-size: inherit; }
+h6 tt, h6 code { font-size: inherit; }
+h1 { padding-bottom: 0.3em; font-size: 2.25em; line-height: 1.2; border-bottom: 1px solid rgb(238, 238, 238); }
+h2 { padding-bottom: 0.3em; font-size: 1.75em; line-height: 1.225; border-bottom: 1px solid rgb(238, 238, 238); }
+h3 { font-size: 1.5em; line-height: 1.43; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; color: rgb(119, 119, 119); }
+p, blockquote, ul, ol, dl, table { margin: 0.8em 0px; }
+li > ol, li > ul { margin: 0px; }
+hr { height: 4px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border-width: 0px 0px 1px; border-style: none none solid; border-top-color: initial; border-right-color: initial; border-left-color: initial; border-image: initial; overflow: hidden; box-sizing: content-box; border-bottom-color: rgb(221, 221, 221); }
+body > h2:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child + h2 { margin-top: 0px; padding-top: 0px; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child { margin-top: 0px; padding-top: 0px; }
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 { margin-top: 0px; padding-top: 0px; }
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p { margin-top: 0px; }
+li p.first { display: inline-block; }
+ul, ol { padding-left: 30px; }
+ul:first-child, ol:first-child { margin-top: 0px; }
+ul:last-child, ol:last-child { margin-bottom: 0px; }
+blockquote { border-left: 4px solid rgb(221, 221, 221); padding: 0px 15px; color: rgb(119, 119, 119); }
+blockquote blockquote { padding-right: 0px; }
+table { padding: 0px; word-break: initial; }
+table tr { border-top: 1px solid rgb(204, 204, 204); background-color: white; margin: 0px; padding: 0px; }
+table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border: 1px solid rgb(204, 204, 204); text-align: left; margin: 0px; padding: 6px 13px; }
+table tr td { border: 1px solid rgb(204, 204, 204); text-align: left; margin: 0px; padding: 6px 13px; }
+table tr th:first-child, table tr td:first-child { margin-top: 0px; }
+table tr th:last-child, table tr td:last-child { margin-bottom: 0px; }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); }
+.md-fences, code, tt { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); border-radius: 3px; font-family: Consolas, "Liberation Mono", Courier, monospace; padding: 2px 4px 0px; font-size: 0.9em; }
+.md-fences { margin-bottom: 15px; margin-top: 15px; padding: 8px 1em 6px; }
+.task-list { padding-left: 0px; }
+.task-list-item { padding-left: 32px; }
+.task-list-item input { top: 3px; left: 8px; }
+@media screen and (min-width: 914px) {
+}
+@media print {
+  html { font-size: 13px; }
+  table, pre { break-inside: avoid; }
+  pre { word-wrap: break-word; }
+}
+.md-fences { background-color: rgb(248, 248, 248); }
+#write pre.md-meta-block { padding: 1rem; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border: 0px; border-radius: 3px; color: rgb(119, 119, 119); margin-top: 0px !important; }
+.mathjax-block > .code-tooltip { bottom: 0.375rem; }
+#write > h3.md-focus::before { left: -1.5625rem; top: 0.375rem; }
+#write > h4.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h5.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h6.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+.md-image > .md-meta { border: 1px solid rgb(221, 221, 221); border-radius: 3px; font-family: Consolas, "Liberation Mono", Courier, monospace; padding: 2px 4px 0px; font-size: 0.9em; color: inherit; }
+.md-tag { color: inherit; }
+.md-toc { margin-top: 20px; padding-bottom: 20px; }
+#typora-quick-open { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); }
+#typora-quick-open-item { background-color: rgb(250, 250, 250); border-color: rgb(254, 254, 254) rgb(229, 229, 229) rgb(229, 229, 229) rgb(238, 238, 238); border-style: solid; border-width: 1px; }
+#md-notification::before { top: 10px; }
+.on-focus-mode blockquote { border-left-color: rgba(85, 85, 85, 0.117647); }
+header, .context-menu, .megamenu-content, footer { font-family: "Segoe UI", Arial, sans-serif; }
+
+
+
+
+
+
+</style>
+</head>
+<body class='typora-export' >
+<div  id='write'  class = 'is-node'><h2><a name='header-c5' class='md-header-anchor '></a>Vehicle Detection</h2><h3><a name='header-c7' class='md-header-anchor '></a>This write-up describes a Computer Vision based approach for detecting and tracking vehicles in view of a camera mounted in a car. An SVM classifier is trained to detect cars in view and a tracker is used to draw bounding boxes.</h3><hr /><p><strong>Vehicle Detection Project</strong></p><p>The goals / steps of this project are the following:</p><ul><li>Train a Linear SVM classifier using Histogram of Oriented Gradients (HOG) features and other color features using a labeled training set of images.</li><li>Implement a sliding-window technique and use the trained classifier to search for vehicles in images.</li><li>Create a heat map of recurring detections to reject outliers and follow detected vehicles in a video stream.</li><li>Estimate a bounding box for vehicles detected.</li></ul><h2><a name='header-c40' class='md-header-anchor '></a>Section I</h2><h3><a name='header-c41' class='md-header-anchor '></a>Code Layout</h3><ul><li><strong>features.py</strong>: File contains functions to extract HOG and color features. These functions are used by the detection code.</li><li><strong>SVM_Training.py</strong>: File contains code to train and save an SVM classifier. The classifier is saved out as a pickle (.p) file.</li><li><strong>Car_NoCar_LinearSVC.p</strong>: Pickle file containing the SVM classifier.</li><li><strong>CarTracker.py</strong>: Class; Tracker objects. Maintains and updates state of the tracked car. The <em>update</em> function here can be modified with a smarter tracking algorithm.</li><li><strong>detectCars.py</strong>: Main file to run detection. Also contains functions to generate sliding windows.</li></ul><p></p><h2><a name='header-c60' class='md-header-anchor '></a>Section II</h2><h3><a name='header-c61' class='md-header-anchor '></a>Features</h3><ul><li><p>The code for feature extraction can be found in <code>extract_features</code>, <code>calc_bin_spatial_features</code> and <code>calc_hog_features</code> function in <strong>features.py</strong>.</p></li><li><p>2 types of features have been used for describing cars.</p><ul><li>HOG Features</li><li>Color Spatial features</li></ul></li><li><p>64x64 pixel patches are used for extraction.</p></li></ul><h5><a name='header-c79' class='md-header-anchor '></a>Histogram of Oriented Gradients (HOG)</h5><ul><li>The code for this can be found in the <code>calc_hog_features</code> function in <strong>features.py</strong>.</li><li>The choice of color space and different <code>skimage.hog()</code> parameters (<code>orientations</code>, <code>pixels_per_cell</code>, and <code>cells_per_block</code>) was done with some trial and error. Since, HOG deals with gradients, it is generally more robust to color spaces.</li><li>We can not make this vector too long as it adversely affects the processing time.</li><li>The <code>YUV color space</code> and HOG parameters of <code>orientations=9</code>, <code>pixels_per_cell=(8, 8)</code> and <code>cells_per_block=(2, 2)</code> were finally decided on. Here is an example of HOG features on the sample images:
+<span class='md-image'><img alt=''HOG Features Car'' src='./output_images/HOG_car.jpg'></img></span>  <span class='md-image'><img alt=''HOG Features No Car'' src='./output_images/HOG_no_car.jpg'></img></span></li></ul><h5><a name='header-c94' class='md-header-anchor '></a>Color Spatial Features</h5><ul><li>The code can be found in  <code>calc_bin_spatial_features</code> function in <strong>features.py</strong>.</li><li>Vector of <code>HSV colorspace</code>. The 64x64 patch is scaled down by 2 and all channel values are flattened into a 1D vector.</li></ul><h3><a name='header-c103' class='md-header-anchor '></a>SVM Classifier</h3><ul><li>The code for this can be found in <strong>SVM_Training.py</strong>.</li><li>The SVM with the Linear Kernel is trained on all the data form the GTI and KITTI dataset.</li><li>A <code>scaler</code> is also fit on the data to be used during prediction.</li><li>The classifier is saved as a pickle file.</li></ul><p></p><h3><a name='header-c119' class='md-header-anchor '></a>Multi Scale Search:</h3><ul><li>From the data we can make an assumption that the cars must fit inside a 64x64 size image patch.</li><li>If cars are closer to the camera, they will be larger and the patch will need to be scaled down.</li><li>If cars are further away, towards the vanishing point, the image patch will need to be scaled up.</li><li>By looking at some data frames and identifying the max and minimum size of the cars, I fit a linear function to identify scales depending on patch location in image frame.</li><li>The code can be found at <code>xy_to_scale</code> in <strong>detectCars.py</strong>. The scale at vanishing point is 0.0, and at the farthest points is 2.8. A sample is shown. This is a continuous function; discrete values shown for illustration.<span class='md-image'><img alt=''Multi Scale Search'' src='./output_images/scales.jpg'></img></span></li></ul><p></p><h3><a name='header-c138' class='md-header-anchor '></a>Sliding Window Search</h3><p>A sliding window search method is used to detect cars. 2 stages are used.</p><ul><li><p>Coarse Search Windows:</p><ul><li><p>The code can be found at <code>coarse_detection</code> in <strong>detectCars.py</strong>.</p></li><li><p>We identify 3 areas where cars can be found. The coarse windows are done at 2 scales for each area. These values have been derived by using the function explained above.</p></li><li><p>The overlap used for the larger areas is 50% and for the smaller central area is 25%.</p></li><li><p>We are very permissive and do not reject outliers here.</p></li><li><p>This coarse detection is also run every 3<sup>rd</sup> frame.</p></li><li><p>A visualization is shown. </p><table><thead><tr><th style='text-align:center;' >Left Windows</th><th style='text-align:center;' >Center Windows</th><th style='text-align:center;' >Right Windows</th></tr></thead><tbody><tr><td style='text-align:center;' ><span class='md-image'><img alt=''Coarse Windows Left'' src='./output_images/coarse_sliding_windows_left.jpg'></img></span></td><td style='text-align:center;' ><span class='md-image'><img alt=''Coarse Windows Center'' src='./output_images/coarse_sliding_windows_center.jpg'></img></span></td><td style='text-align:center;' ><span class='md-image'><img alt=''Coarse Windows Right'' src='./output_images/coarse_sliding_windows_right.jpg'></img></span></td></tr></tbody></table></li></ul><p>​</p></li><li><p>Fine Search Windows:</p><ul><li>The code can be found at <code>fine_detection</code> in <strong>detectCars.py</strong>.</li><li>Once we have a putative match from the Coarse Search Windows, we do a more refined search.</li><li>Sliding windows are generated around the area using the centroid. The scale is calculated according to the function above.</li><li>This stage has more restrictive rejection policy. The vehicle needs to be detected in at least 5 windows in the search patch. This detection is run every frame for every tracked object and new putative matches.</li><li>A visualization is shown.<span class='md-image'><img alt=''Fine Windows 1'' src='./output_images/fine_sliding_windows_1.jpg'></img></span></li></ul></li></ul><p></p><h4><a name='header-c196' class='md-header-anchor '></a>Performance Optimization</h4><ul><li>The final classifier was selected on basis of the training and validation test results.</li><li>For a search region, HOG features are only calculated once. Feature vectors from the patches are then assembled into one large matrix. Predictions are calculated as one matrix multiply.</li></ul><p></p><h2><a name='header-c206' class='md-header-anchor '></a>Section III</h2><h4><a name='header-c207' class='md-header-anchor '></a>Video Implementation</h4><ul><li>Here&#39;s a <a href='./out_proj.mp4'>link to my video result</a></li><li>The bounding boxes are smooth and consistent.</li></ul><h4><a name='header-c215' class='md-header-anchor '></a>Filtering and False Positives</h4><ul><li>For filtering, we apply a threshold of 5 on the heat map in the fine search. We do not threshold in the coarse search as this allows for consistent detection.</li><li>False positives are culled in the Fine Search.</li><li>Every time a new centroid is found by the Coarse Search, we run a Fine Search. If it is deemed to be a vehicle, we check back with the existing tracked objects. If the new centroid is too close to an existing one, it probably is a redundant overlap and is rejected. If not, it is added to the list of tracked objects.</li><li>The low-pass filter can be found in <code>update</code> in the <strong>CarTracker</strong> class.</li><li>For each tracked object, we run the Fine Search independently. This automatically takes care of overlapping objects.</li><li><code>scipy.ndimage.measurements.label()</code>  is used to identify individual blobs in the heatmap. Our heatmap only has one blob each. Bounding boxes are then constructed around the area of each blob detected.</li></ul><h5><a name='header-c235' class='md-header-anchor '></a>Here are the corresponding heat maps for the frame shown above:</h5><p><span class='md-image'><img alt=''Heat Map'' src='./output_images/heat_1.jpg'></img></span> <span class='md-image'><img alt=''Heat Map'' src='./output_images/heat_2.jpg'></img></span></p><h5><a name='header-c238' class='md-header-anchor '></a>Here are the resulting bounding boxes:</h5><p><span class='md-image'><img alt=''Bounding Boxes'' src='./output_images/output_bboxes.jpg'></img></span></p><p></p><hr /><h3><a name='header-c244' class='md-header-anchor '></a>Discussion</h3><ul><li><p>The bounding boxes are smooth and fairly consistent. The results look good considering only a low-pass filter is used.</p></li><li><p>The detection and tracking are done in multiple scales, but in constrained windows around an expected region. This helps provide speedups even with a variety of scales and overlaps.</p></li><li><p>Each tracked car is assigned a tracker object. The pipeline can be easily multi-threaded as all objects can be tracked independent of each other.</p><ul><li>This also allows for the system to track objects close to each other without merging them into one large bounding box.</li></ul></li><li><p>The coarse window search since independent can also be multi-threaded, saving time.</p></li><li><p>The implementation is based on the GTI and KITTI datasets. It is possible that the dataset is not representative of all types of cars and their orientations. This may result in a not so optimal classifier.</p></li><li><p>The tracker pipeline could be made more robust by using a Kalman filter or any such tracker/filter. Another approach could be to detect the car and then track it&#39;s features using a Lucas-Kanade based methods.</p></li><li><p>The pipeline does not take cues from the position on the road as of now. The search windows can be adjusted depending on the vehicles position. If we are very close to the center divider, we do not need to search on the left and so on.</p></li><li><p>I have vectorised as much as I could. All SVM predictions for one ROI are happening as a matrix multiply saving time, but that is not enough to make the pipeline realtime (currently ~5fps).</p></li><li><p>The HOG feature extraction is currently the bottleneck in the pipeline. It takes an order of magnitude more time compared to everything else. More work is required in making this work at 25-30 fps.</p></li></ul></div>
+</body>
+</html>
